@@ -7,16 +7,13 @@ const options = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 
 // id 생성
 const uid = () => {
-  var id="";
-
-  // length of ID : 0 ~ 8
-  var length = Math.floor(Math.random() * 8) + 1;
-
-  for (var i=0; i<length; i++) {
-    id += options.charAt(Math.floor(Math.random() * 62));
-  }
-
-  return id;
+    var id="";
+    // length of ID : 0 ~ 8
+    var length = Math.floor(Math.random() * 8) + 1;
+    for(var i=0; i<length; i++) {
+        id += options.charAt(Math.floor(Math.random() * 62));
+    }
+    return id;
 };
 
 // before 검증 및 생성
@@ -25,7 +22,7 @@ const create = async (before, after) => {
         const getUrlQuery = 'SELECT shortUrl FROM `check` WHERE longUrl = ?';
         const getUrlResult = await db.queryParam_Parse(getUrlQuery, [before]);
         console.log(getUrlResult);
-        if (getUrlResult.length == 0) {
+        if(getUrlResult.length == 0) {
             var res = await check(before, after);
 
             //중복시 중복되지 않은 새로운 shortUrl을 생성해서 리턴한다.
@@ -46,10 +43,7 @@ const check = async (before, after) => {
         const getIDQuery = 'SELECT shortUrl FROM `check` WHERE longUrl = ?';
         const getIDResult = await db.queryParam_Parse(getIDQuery, [before]);
 
-        if (getIDResult.length == 0) {
-            // console.log("중복된 ID가 없습니다. 새로운 레코드를 추가합니다.");
-            // gMsg = "";
-            // var result = await URL.create({before: before, after: after});
+        if(getIDResult.length == 0) {
             const insertIDQuery = 'INSERT INTO `check` (longUrl, shortUrl) VALUES (?, ?)';
             const insertIDResult = await db.queryParam_Parse(insertIDQuery, [before, after]);
             if(insertIDResult.length == 0){
