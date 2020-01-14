@@ -16,12 +16,13 @@ const uid = () => {
     return id;
 };
 
-// before 검증 및 생성
+// longUrl 검증 및 생성
 const create = async (before, after) => {
     try {
         const getUrlQuery = 'SELECT shortUrl FROM `check` WHERE longUrl = ?';
         const getUrlResult = await db.queryParam_Parse(getUrlQuery, [before]);
-        console.log(getUrlResult);
+
+        //기존에 없어
         if(getUrlResult.length == 0) {
             var res = await check(before, after);
 
@@ -37,13 +38,15 @@ const create = async (before, after) => {
     }
 }
   
-// before가 이미 검증된 경우(처음 저장하는 경우), id만 중복 여부 검증
+// longUrl이 이미 검증된 경우(처음 저장하는 경우), id만 중복 여부 검증
 const check = async (before, after) => {
     try {
-        const getIDQuery = 'SELECT shortUrl FROM `check` WHERE longUrl = ?';
-        const getIDResult = await db.queryParam_Parse(getIDQuery, [before]);
+        const getIDQuery = 'SELECT shortUrl FROM `check` WHERE shortUrl = ?';
+        const getIDResult = await db.queryParam_Parse(getIDQuery, [after]);
 
+        //기존에 없으면 그 랜덤으로 생성된 after를 그대로 반환
         if(getIDResult.length == 0) {
+            console.log("in");
             const insertIDQuery = 'INSERT INTO `check` (longUrl, shortUrl) VALUES (?, ?)';
             const insertIDResult = await db.queryParam_Parse(insertIDQuery, [before, after]);
             if(insertIDResult.length == 0){
@@ -56,12 +59,12 @@ const check = async (before, after) => {
         check(before, uid());            
     } catch (err) {
         console.log(err);
-        gMsg = "에러가 발생했습니다. 다시 시도해주세요.";
+        gMsg = "다시 시도해주세요.";
         return null;
     }
 }
 
-//GET => 단축을 웹에 띄워주는 과정
+//GET => 단축(shortUrl에 해당하는 longUrl)을 웹에 띄워주는 과정
 router.get('/:web', async(req, res)=>{
     try{
         const web = req.params.web;
@@ -70,7 +73,6 @@ router.get('/:web', async(req, res)=>{
         const getLongResult = await db.queryParam_Parse(getLongQuery, [web]);
 
         if(getLongResult.length == 0){
-            console.log("DB에서 찾을 수 없음");
             return;
         }else{
             res.redirect(getLongResult[0]['longUrl']);
@@ -86,11 +88,6 @@ router.get('/:web', async(req, res)=>{
 //POST => URL 체크 후 존재하면 그대로 리턴, 없으면 생성하여 리턴
 router.post('/create/url', async(req, res)=>{
     var long_url = req.body.before;  
-
-    //'http://'를 붙이지 않았을 경우 처리
-    if (!long_url.match(/^[a-zA-Z]+:\/\//)){
-        long_url = 'http://' + long_url;
-    }
   
     var short_url = uid();//id생성
     gMsg="";
@@ -100,6 +97,7 @@ router.post('/create/url', async(req, res)=>{
   
     if (status) {
         console.log("최종 메세지 : " + gMsg);
+        //res.data의 형태
         res.send({data: status, msg: gMsg});
     } else {
         console.log("최종 메세지 : " + gMsg);
