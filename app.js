@@ -23,6 +23,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
 // 정적 페이지 제공
 app.use(express.static('public'));
 

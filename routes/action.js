@@ -45,13 +45,13 @@ const check = async (before, after) => {
         const getIDResult = await db.queryParam_Parse(getIDQuery, [after]);
 
         //기존에 없으면 그 랜덤으로 생성된 after를 그대로 반환
-        if(getIDResult.length == 0) {
+        if (getIDResult.length == 0) {
             console.log("in");
             const insertIDQuery = 'INSERT INTO `check` (longUrl, shortUrl) VALUES (?, ?)';
             const insertIDResult = await db.queryParam_Parse(insertIDQuery, [before, after]);
-            if(insertIDResult.length == 0){
+            if (insertIDResult.length == 0 ){
                 console.log("inserID 실패");
-            }else{
+            } else {
                 return after;
             }
         }
@@ -72,24 +72,24 @@ router.get('/:web', async(req, res)=>{
         const getLongQuery = 'SELECT longUrl FROM `check` WHERE shortUrl = ?';
         const getLongResult = await db.queryParam_Parse(getLongQuery, [web]);
 
-        if(getLongResult.length == 0){
+        if (getLongResult.length == 0) {
             return;
-        }else{
+        } else {
             res.redirect(getLongResult[0]['longUrl']);
             return;            
         }
-    }catch(err){
+    } catch(err) {
         console.log(err);
         console.log("ERROR");
         res.send(500);
     }
 });
 
-//POST => URL 체크 후 존재하면 그대로 리턴, 없으면 생성하여 리턴
+// POST => URL 체크 후 존재하면 그대로 리턴, 없으면 생성하여 리턴
 router.post('/create/url', async(req, res)=>{
     var long_url = req.body.before;  
   
-    var short_url = uid();//id생성
+    var short_url = uid(); // id생성
     gMsg="";
 
     var status = await create(long_url, short_url);
