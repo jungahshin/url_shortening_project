@@ -82,4 +82,3 @@ public class Base62 {
 		return sum;
 	}
 }
-```ㅍ
