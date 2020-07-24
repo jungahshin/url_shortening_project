@@ -1,11 +1,11 @@
-# url_shortening_project
-Smilegate 개인 과제 (URL shortening)
+
+# URL shortening Project
 
 - **URL shortening 이란?**
 
   URL 단축(URL shortening)은 월드 와이드 웹 상의 긴 URL을 짧게 만들어 주는 기술이다. URL 단축 기능을 제공하는 서버는 HTTP 넘겨주기를 이용해 클라이언트(client)를 긴 URL로 넘겨준다.
 
-
+<br/>
 
 ## DB table
 
@@ -18,7 +18,7 @@ Smilegate 개인 과제 (URL shortening)
 
 
 
-
+<br/>
 
 ## Short URL 생성 원리
 
@@ -26,7 +26,7 @@ Short URL은 해당 URL을 직접적으로 encoding하는 방식이 아니라, U
 
 encoding방식은 base 62를 사용했다.
 
-
+<br/>
 
 #### *여기서 잠깐! base64가 아닌 base62 방식을 사용하는 이유는?*
 
@@ -40,7 +40,7 @@ encoding방식은 base 62를 사용했다.
 
 
 
-
+<br/>
 
 ## 서버에서 Short URL을 처리하는 방식
 
@@ -52,7 +52,7 @@ decoding된 값이 Index값이 되니 해당 Index값의 url을 반환해주면 
 
 그렇게 되면, 최종적으로 Short URL값이 들어왔을 때에 다시 원래의 URL값으로 반환해줄 수 있게 됩니다.
 
-
+<br/>
 
 아래는 base 62방식으로 encoding, decoding 하는 Java코드입니다.
 
